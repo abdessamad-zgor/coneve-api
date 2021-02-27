@@ -11,9 +11,11 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
+    "firebase": "^8.2.9",
     "firebase-admin": "^9.4.2",
     "helmet": "^4.4.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "parse-error": "^0.2.0"
   }
 }

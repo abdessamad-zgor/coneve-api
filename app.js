@@ -1,10 +1,39 @@
-var createError = require('http-errors');
-var express = require('express');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const logger = require('morgan');
+const pe = require('parse-error');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
-var app = express();
+let app = express();
+
+// For BodyParser
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '200mb'
+}));
+app.use(bodyParser.json({ limit: '200mb' }));
 
 app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+
+// CORS
+app.use(cors());
+
+// The main page
+app.get('/', function (req, res) {
+  res.json({
+    version: process.env.API_VERSION,
+    status: true
+  });
+});
+
+//Begin Routes
+let routes = require('./routes');
+app.use('/v1', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -13,15 +42,18 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  let errorMessage = {};
+  errorMessage.message = err.message;
+  errorMessage.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  errorMessage.status = err.status || 500;
+
+  res.json(errorMessage);
 });
 
 module.exports = app;
 
+process.on('unhandledRejection', error => {
+  console.error('Uncaught Error', pe(error));
+});
 
