@@ -12,8 +12,7 @@ const firebaseConfig = {
     measurementId: "G-E45MFZ168S"
 };
 
-admin.initializeApp(firebaseConfig);
+let app = admin.initializeApp(firebaseConfig, "app");
 
-let db = admin.database();
 
-module.exports = db;
+module.exports = app;
