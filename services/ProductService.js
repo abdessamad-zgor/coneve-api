@@ -1,7 +1,8 @@
 class ProductService{
 
-    constructor(Product) {
+    constructor(Product, idGenerator) {
         this.product = Product;
+        this.idGenerator = idGenerator;
     }
 
     async listAllProducts() {
@@ -15,31 +16,18 @@ class ProductService{
     }
 
     async createProduct(data) {
-        await this.product.set(data);
+        await this.product.doc(idGenerator()).set(data);
         return data;
     }
 
     async updateProduct(id, data) {
-        let doc = this.product.doc("/"+id).update(data);
+        await this.product.doc("/"+id).update(data);
         return data;
     }
 
     async deleteProduct(id) {
-        
-    }
-
-    async deleteProducts(idProducts) {
-        let idList = {
-            _id:{
-                $in: idProducts
-            }
-        };
-        await this.product.deleteMany(idList, (err, result)=>{
-            if (err){
-                throw err;
-            }
-            return result;
-        })
+        await this.product.doc('/'+id).remove();
+        return true
     }
 }
 

@@ -1,12 +1,20 @@
-const db = require('./../data');
 class UserService {
-    constructor (){
-        this.User = db.ref('/users');
+    constructor (User, orderService, productService, authProvider, idGenerator){
+        this.User = User;
+        this.orderService = orderService;
+        this.productService = productService;
+        this.authProvider = authProvider;
+        this.idGenerator = idGenerator
     }
-    async placeOrder(cart){
-
+    async placeOrder(cart, formInfo){
+        this.orderService.doc(idGenerator()).create(cart);
+        return cart;
     }
     async seeProducts(){
+        let products = this.productService.listAllProducts();
+        return products;
+    }
+    async signUp(){
 
     }
     async signInWithFacebock(){
